@@ -1,0 +1,72 @@
+# Visual Studio
+.vs/
+*.user
+*.userosscache
+*.suo
+*.sln.docstates
+
+# Build artifacts
+bin/
+obj/
+out/
+
+# Rider
+.idea/
+*.sln.iml
+
+# NuGet
+*.nupkg
+packages/
+project.lock.json
+.nuget/
+
+# Dotnet publish
+publish/
+
+# Test results
+TestResults/
+*.trx
+
+# Local secrets and settings
+appsettings.*.json
+secrets.json
+
+# Logs
+*.log
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# VS Code
+.vscode/
+
+# Node
+node_modules/
+
+# Coverage
+coverage/
+*.coverage
+*.coveragexml
+
+# Database files
+*.db
+*.sqlite
+
+# JetBrains Rider cache
+.idea/
+
+# Resharper
+_ReSharper*/
+*.DotSettings.user
+
+# Misc
+*.psess
+*.vsp
+*.vspx
+
+# Ignore compiled executables
+*.exe
+*.dll
+
+# Keep this file in the repo
