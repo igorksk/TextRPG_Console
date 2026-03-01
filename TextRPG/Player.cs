@@ -161,9 +161,56 @@ namespace TextRPG
                 return;
             }
 
-            foreach (var item in Inventory)
+            for (int i = 0; i < Inventory.Count; i++)
             {
-                Console.WriteLine($"- {item.Name}: {item.Description}");
+                var item = Inventory[i];
+                Console.WriteLine($"{i + 1}. {item.Name}: {item.Description}");
+            }
+
+            Console.WriteLine("\nChoose an item number to use/equip/drop or press ENTER to go back:");
+            string? input = Console.ReadLine();
+            if (string.IsNullOrWhiteSpace(input)) return;
+            if (!int.TryParse(input, out int choice) || choice < 1 || choice > Inventory.Count)
+            {
+                Console.WriteLine("Invalid choice.");
+                return;
+            }
+
+            var selected = Inventory[choice - 1];
+            UseItem(selected);
+        }
+
+        private void UseItem(Item item)
+        {
+            switch (item)
+            {
+                case Food f:
+                    AddFood(f.Nutrition);
+                    Inventory.Remove(item);
+                    Console.WriteLine($"You ate {f.Name} and restored {f.Nutrition} food.");
+                    break;
+                case Water w:
+                    AddWater(w.Hydration);
+                    Inventory.Remove(item);
+                    Console.WriteLine($"You drank {w.Name} and restored {w.Hydration} water.");
+                    break;
+                case Medicine m:
+                    Health = Math.Min(100, Health + m.Healing);
+                    Radiation = Math.Max(0, Radiation - m.RadiationRemoval);
+                    Inventory.Remove(item);
+                    Console.WriteLine($"You used {m.Name}. Healed {m.Healing} health and removed {m.RadiationRemoval} radiation.");
+                    break;
+                case Weapon wp:
+                    Console.WriteLine($"Do you want to equip {wp.Name}? (y/n)");
+                    var answer = Console.ReadLine();
+                    if (!string.IsNullOrWhiteSpace(answer) && answer.Trim().ToLower() == "y")
+                    {
+                        EquipWeapon(wp);
+                    }
+                    break;
+                default:
+                    Console.WriteLine("This item cannot be used.");
+                    break;
             }
         }
     }
