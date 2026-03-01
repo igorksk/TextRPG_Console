@@ -12,6 +12,9 @@ namespace TextRPG
         public int Level { get; private set; }
         public int Experience { get; private set; }
 
+        // Equipped weapon (null = hands)
+        public Weapon? CurrentWeapon { get; private set; }
+
         public Player()
         {
             Health = 100;
@@ -22,6 +25,7 @@ namespace TextRPG
 
             Level = 1;
             Experience = 0;
+            CurrentWeapon = null; // hands by default
         }
 
         public void TakeDamage(int damage)
@@ -84,6 +88,51 @@ namespace TextRPG
         {
             Inventory.Add(item);
             Console.WriteLine($"You found: {item.Name}");
+        }
+
+        public void EquipWeapon(Weapon? weapon)
+        {
+            CurrentWeapon = weapon;
+            Console.WriteLine(weapon == null ? "You are now unarmed (hands)." : $"Equipped: {weapon.Name}");
+        }
+
+        public void EquipWeaponFromInventory()
+        {
+            Console.WriteLine("\n=== Equip Weapon ===");
+            Console.WriteLine("0. Hands (no weapon)");
+            var weapons = new List<Weapon>();
+            for (int i = 0; i < Inventory.Count; i++)
+            {
+                if (Inventory[i] is Weapon w)
+                {
+                    weapons.Add(w);
+                    Console.WriteLine($"{weapons.Count}. {w.Name} (Damage: {w.Damage})");
+                }
+            }
+
+            if (weapons.Count == 0)
+            {
+                Console.WriteLine("No weapons in inventory.");
+                return;
+            }
+
+            Console.WriteLine("Choose weapon number to equip (or 0 for hands):");
+            string? input = Console.ReadLine();
+            if (int.TryParse(input, out int choice))
+            {
+                if (choice == 0)
+                {
+                    EquipWeapon(null);
+                    return;
+                }
+                if (choice >= 1 && choice <= weapons.Count)
+                {
+                    EquipWeapon(weapons[choice - 1]);
+                    return;
+                }
+            }
+
+            Console.WriteLine("Invalid choice. No changes made.");
         }
 
         public void AddExperience(int amount)

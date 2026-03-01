@@ -33,11 +33,13 @@ namespace TextRPG
             Console.WriteLine($"Radiation: {player.Radiation}");
             Console.WriteLine($"Water: {player.Water}");
             Console.WriteLine($"Food: {player.Food}");
+            Console.WriteLine($"Current weapon: {(player.CurrentWeapon == null ? "Hands" : player.CurrentWeapon.Name)}");
             Console.WriteLine("\nWhat would you like to do?");
             Console.WriteLine("1. Explore");
             Console.WriteLine("2. Rest");
             Console.WriteLine("3. Check inventory");
-            Console.WriteLine("4. Exit game");
+            Console.WriteLine("4. Equip weapon");
+            Console.WriteLine("5. Exit game");
         }
 
         private void ProcessInput()
@@ -55,6 +57,9 @@ namespace TextRPG
                     player.ShowInventory();
                     break;
                 case "4":
+                    player.EquipWeaponFromInventory();
+                    break;
+                case "5":
                     isRunning = false;
                     break;
                 default:
