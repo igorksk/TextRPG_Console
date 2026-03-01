@@ -72,9 +72,87 @@ namespace TextRPG
         private void EncounterEnemy(Player player)
         {
             Console.WriteLine("You encountered a mutated creature!");
-            int damage = random.Next(5, 20);
-            player.TakeDamage(damage);
-            Console.WriteLine($"You took {damage} damage!");
+
+            int enemyHealth = random.Next(20, 61);
+            Console.WriteLine($"Enemy health: {enemyHealth}");
+
+            // Turn-based fight loop
+            while (enemyHealth > 0)
+            {
+                Console.WriteLine($"\nYour Health: {player.Health} | Enemy Health: {enemyHealth}");
+
+                // collect weapons from inventory
+                var weapons = new List<Weapon>();
+                foreach (var it in player.Inventory)
+                {
+                    if (it is Weapon w)
+                        weapons.Add(w);
+                }
+
+                Console.WriteLine("Choose your action:");
+                Console.WriteLine("1. Attack with hands");
+                if (weapons.Count > 0)
+                    Console.WriteLine("2. Attack with weapon");
+                Console.WriteLine("3. Attempt to flee");
+
+                string? input = Console.ReadLine();
+
+                if (input == "1")
+                {
+                    int damage = random.Next(1, 6); // weak hand attack
+                    enemyHealth -= damage;
+                    Console.WriteLine($"You punch the creature for {damage} damage.");
+                }
+                else if (input == "2" && weapons.Count > 0)
+                {
+                    Console.WriteLine("Choose a weapon:");
+                    for (int i = 0; i < weapons.Count; i++)
+                    {
+                        Console.WriteLine($"{i + 1}. {weapons[i].Name} (Damage: {weapons[i].Damage})");
+                    }
+                    string? choice = Console.ReadLine();
+                    if (int.TryParse(choice, out int idx) && idx >= 1 && idx <= weapons.Count)
+                    {
+                        var weapon = weapons[idx - 1];
+                        int damage = weapon.Damage + random.Next(-2, 3);
+                        damage = Math.Max(1, damage);
+                        enemyHealth -= damage;
+                        Console.WriteLine($"You attack with {weapon.Name} for {damage} damage.");
+                    }
+                    else
+                    {
+                        Console.WriteLine("Invalid weapon choice. You lose your turn.");
+                    }
+                }
+                else if (input == "3")
+                {
+                    // 50% chance to flee
+                    if (random.Next(100) < 50)
+                    {
+                        Console.WriteLine("You managed to flee from the creature.");
+                        return;
+                    }
+                    else
+                    {
+                        Console.WriteLine("You failed to flee!");
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("Invalid action.");
+                }
+
+                if (enemyHealth <= 0)
+                {
+                    Console.WriteLine("You defeated the creature!");
+                    break;
+                }
+
+                // Enemy retaliates if player attacked or failed to flee
+                int enemyDamage = random.Next(5, 20);
+                player.TakeDamage(enemyDamage);
+                Console.WriteLine($"The creature attacks and deals {enemyDamage} damage to you.");
+            }
         }
 
         private void FindResources(Player player)
