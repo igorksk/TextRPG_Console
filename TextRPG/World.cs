@@ -81,49 +81,38 @@ namespace TextRPG
             {
                 Console.WriteLine($"\nYour Health: {player.Health} | Enemy Health: {enemyHealth}");
                 Console.WriteLine($"Level: {player.Level} | XP: {player.Experience}/{player.Level * 100}");
-
-                // collect weapons from inventory
-                var weapons = new List<Weapon>();
-                foreach (var it in player.Inventory)
-                {
-                    if (it is Weapon w)
-                        weapons.Add(w);
-                }
+                Console.WriteLine($"Equipped: {(player.CurrentWeapon == null ? "Hands" : player.CurrentWeapon.Name)}");
 
                 Console.WriteLine("Choose your action:");
-                Console.WriteLine("1. Attack with hands");
-                if (weapons.Count > 0)
-                    Console.WriteLine("2. Attack with weapon");
+                Console.WriteLine("1. Attack");
+                Console.WriteLine("2. Equip weapon");
                 Console.WriteLine("3. Attempt to flee");
 
                 string? input = Console.ReadLine();
 
+                bool playerDidAttack = false;
+
                 if (input == "1")
                 {
-                    int damage = random.Next(1, 6); // weak hand attack
-                    enemyHealth -= damage;
-                    Console.WriteLine($"You punch the creature for {damage} damage.");
-                }
-                else if (input == "2" && weapons.Count > 0)
-                {
-                    Console.WriteLine("Choose a weapon:");
-                    for (int i = 0; i < weapons.Count; i++)
+                    if (player.CurrentWeapon == null)
                     {
-                        Console.WriteLine($"{i + 1}. {weapons[i].Name} (Damage: {weapons[i].Damage})");
+                        int damage = random.Next(1, 6); // hands
+                        enemyHealth -= damage;
+                        Console.WriteLine($"You attack with your hands for {damage} damage.");
                     }
-                    string? choice = Console.ReadLine();
-                    if (int.TryParse(choice, out int idx) && idx >= 1 && idx <= weapons.Count)
+                    else
                     {
-                        var weapon = weapons[idx - 1];
+                        var weapon = player.CurrentWeapon;
                         int damage = weapon.Damage + random.Next(-2, 3);
                         damage = Math.Max(1, damage);
                         enemyHealth -= damage;
                         Console.WriteLine($"You attack with {weapon.Name} for {damage} damage.");
                     }
-                    else
-                    {
-                        Console.WriteLine("Invalid weapon choice. You lose your turn.");
-                    }
+                    playerDidAttack = true;
+                }
+                else if (input == "2")
+                {
+                    player.EquipWeaponFromInventory();
                 }
                 else if (input == "3")
                 {
@@ -152,9 +141,12 @@ namespace TextRPG
                 }
 
                 // Enemy retaliates if player attacked or failed to flee
-                int enemyDamage = random.Next(5, 20);
-                player.TakeDamage(enemyDamage);
-                Console.WriteLine($"The creature attacks and deals {enemyDamage} damage to you.");
+                if (playerDidAttack || input == "3")
+                {
+                    int enemyDamage = random.Next(5, 20);
+                    player.TakeDamage(enemyDamage);
+                    Console.WriteLine($"The creature attacks and deals {enemyDamage} damage to you.");
+                }
             }
         }
 
