@@ -8,6 +8,10 @@ namespace TextRPG
         public int Food { get; private set; }
         public List<Item> Inventory { get; private set; }
 
+        // Progression
+        public int Level { get; private set; }
+        public int Experience { get; private set; }
+
         public Player()
         {
             Health = 100;
@@ -15,6 +19,9 @@ namespace TextRPG
             Water = 100;
             Food = 100;
             Inventory = [];
+
+            Level = 1;
+            Experience = 0;
         }
 
         public void TakeDamage(int damage)
@@ -77,6 +84,23 @@ namespace TextRPG
         {
             Inventory.Add(item);
             Console.WriteLine($"You found: {item.Name}");
+        }
+
+        public void AddExperience(int amount)
+        {
+            if (amount <= 0) return;
+            Experience += amount;
+            Console.WriteLine($"You gained {amount} XP.");
+
+            // Level up while enough XP
+            while (Experience >= Level * 100)
+            {
+                Experience -= Level * 100;
+                Level++;
+                // reward on level up
+                Health = Math.Min(100, Health + 20);
+                Console.WriteLine($"You leveled up! You are now level {Level}. Health restored slightly.");
+            }
         }
 
         public void ShowInventory()

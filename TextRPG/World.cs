@@ -80,6 +80,7 @@ namespace TextRPG
             while (enemyHealth > 0)
             {
                 Console.WriteLine($"\nYour Health: {player.Health} | Enemy Health: {enemyHealth}");
+                Console.WriteLine($"Level: {player.Level} | XP: {player.Experience}/{player.Level * 100}");
 
                 // collect weapons from inventory
                 var weapons = new List<Weapon>();
@@ -145,6 +146,8 @@ namespace TextRPG
                 if (enemyHealth <= 0)
                 {
                     Console.WriteLine("You defeated the creature!");
+                    int xpGain = random.Next(20, 51);
+                    player.AddExperience(xpGain);
                     break;
                 }
 

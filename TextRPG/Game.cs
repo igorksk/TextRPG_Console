@@ -28,6 +28,7 @@ namespace TextRPG
         private void DisplayStatus()
         {
             Console.WriteLine("\n=== Status ===");
+            Console.WriteLine($"Level: {player.Level} | XP: {player.Experience}/{player.Level * 100}");
             Console.WriteLine($"Health: {player.Health}");
             Console.WriteLine($"Radiation: {player.Radiation}");
             Console.WriteLine($"Water: {player.Water}");
