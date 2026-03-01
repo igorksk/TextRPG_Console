@@ -1,3 +1,5 @@
+using TextRPG.Items;
+
 namespace TextRPG
 {
     public class Player
@@ -203,7 +205,7 @@ namespace TextRPG
                 case Weapon wp:
                     Console.WriteLine($"Do you want to equip {wp.Name}? (y/n)");
                     var answer = Console.ReadLine();
-                    if (!string.IsNullOrWhiteSpace(answer) && answer.Trim().ToLower() == "y")
+                    if (!string.IsNullOrWhiteSpace(answer) && answer.Trim().Equals("y", StringComparison.CurrentCultureIgnoreCase))
                     {
                         EquipWeapon(wp);
                     }

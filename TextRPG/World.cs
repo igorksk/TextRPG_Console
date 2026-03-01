@@ -1,3 +1,5 @@
+using TextRPG.Items;
+
 namespace TextRPG
 {
     public class World
