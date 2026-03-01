@@ -32,7 +32,7 @@ namespace TextRPG
             // Random events
             int eventRoll = random.Next(100);
             
-            if (eventRoll < 30)
+            if (eventRoll < 40)
             {
                 FindItem(player);
             }
@@ -73,7 +73,7 @@ namespace TextRPG
         {
             Console.WriteLine("You encountered a mutated creature!");
 
-            int enemyHealth = random.Next(20, 61);
+            int enemyHealth = random.Next(10, 41);
             Console.WriteLine($"Enemy health: {enemyHealth}");
 
             // Turn-based fight loop
