@@ -56,13 +56,24 @@ namespace TextRPG
 
         private void FindItem(Player player)
         {
-            int itemType = random.Next(4);
+            int itemType = random.Next(8);
             Item foundItem = itemType switch
             {
+                // Food
                 0 => new Food("Canned Food", "Old canned food, but still edible", 10, 30),
-                1 => new Water("Bottle of Water", "Dirty water, but drinkable", 5, 20),
-                2 => new Weapon("Rusty Knife", "An old knife, but can still deal damage", 15, 10),
-                _ => new Medicine("First Aid Kit", "A set for first aid", 20, 30, 10),
+                1 => new Food("Dried Meat", "Preserved jerky, high nutrition", 15, 40),
+
+                // Water
+                2 => new Water("Bottle of Water", "Dirty water, but drinkable", 5, 20),
+                3 => new Water("Purified Water", "Clean water, restores more hydration", 10, 40),
+
+                // Weapons
+                4 => new Weapon("Rusty Knife", "An old knife, but can still deal damage", 15, 10),
+                5 => new Weapon("Pistol", "Old service pistol, needs ammo", 50, 25),
+
+                // Medicine
+                6 => new Medicine("First Aid Kit", "A set for first aid", 20, 30, 10),
+                _ => new Medicine("Antirad Pack", "Removes radiation and heals minor wounds", 30, 20, 30),
             };
             player.AddItem(foundItem);
         }
