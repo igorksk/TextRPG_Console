@@ -74,15 +74,19 @@ namespace TextRPG
 
         private void EncounterEnemy(Player player)
         {
-            Console.WriteLine("You encountered a mutated creature!");
+            // Randomly select an enemy type
+            Enemy baseEnemy = Enemy.Data.Enemies[random.Next(Enemy.Data.Enemies.Length)];
+            // Clone the enemy so we can mutate health
+            Enemy enemy = new(baseEnemy.Name, baseEnemy.Description, baseEnemy.Health, baseEnemy.MinDamage, baseEnemy.MaxDamage, baseEnemy.XPReward, baseEnemy.RadiationOnHit);
 
-            int enemyHealth = random.Next(10, 41);
-            Console.WriteLine($"Enemy health: {enemyHealth}");
+            Console.WriteLine($"You encountered a {enemy.Name}!");
+            Console.WriteLine(enemy.Description);
+            Console.WriteLine($"Enemy health: {enemy.Health}");
 
             // Turn-based fight loop
-            while (enemyHealth > 0)
+            while (enemy.Health > 0)
             {
-                Console.WriteLine($"\nYour Health: {player.Health} | Enemy Health: {enemyHealth}");
+                Console.WriteLine($"\nYour Health: {player.Health} | {enemy.Name} Health: {enemy.Health}");
                 Console.WriteLine($"Level: {player.Level} | XP: {player.Experience}/{player.Level * 100}");
                 Console.WriteLine($"Equipped: {(player.CurrentWeapon == null ? "Hands" : player.CurrentWeapon.Name)}");
 
@@ -97,18 +101,19 @@ namespace TextRPG
 
                 if (input == "1")
                 {
+                    int damage;
                     if (player.CurrentWeapon == null)
                     {
-                        int damage = random.Next(1, 6); // hands
-                        enemyHealth -= damage;
+                        damage = random.Next(1, 6); // hands
+                        enemy.Health -= damage;
                         Console.WriteLine($"You attack with your hands for {damage} damage.");
                     }
                     else
                     {
                         var weapon = player.CurrentWeapon;
-                        int damage = weapon.Damage + random.Next(-2, 3);
+                        damage = weapon.Damage + random.Next(-2, 3);
                         damage = Math.Max(1, damage);
-                        enemyHealth -= damage;
+                        enemy.Health -= damage;
                         Console.WriteLine($"You attack with {weapon.Name} for {damage} damage.");
                     }
                     playerDidAttack = true;
@@ -122,12 +127,12 @@ namespace TextRPG
                     // 50% chance to flee
                     if (random.Next(100) < 50)
                     {
-                        Console.WriteLine("You managed to flee from the creature.");
+                        Console.WriteLine($"You managed to flee from the {enemy.Name}.");
                         return;
                     }
                     else
                     {
-                        Console.WriteLine("You failed to flee!");
+                        Console.WriteLine($"You failed to flee!");
                     }
                 }
                 else
@@ -135,20 +140,24 @@ namespace TextRPG
                     Console.WriteLine("Invalid action.");
                 }
 
-                if (enemyHealth <= 0)
+                if (enemy.Health <= 0)
                 {
-                    Console.WriteLine("You defeated the creature!");
-                    int xpGain = random.Next(20, 51);
-                    player.AddExperience(xpGain);
+                    Console.WriteLine($"You defeated the {enemy.Name}!");
+                    player.AddExperience(enemy.XPReward);
                     break;
                 }
 
                 // Enemy retaliates if player attacked or failed to flee
                 if (playerDidAttack || input == "3")
                 {
-                    int enemyDamage = random.Next(5, 20);
+                    int enemyDamage = enemy.GetAttackDamage(random);
                     player.TakeDamage(enemyDamage);
-                    Console.WriteLine($"The creature attacks and deals {enemyDamage} damage to you.");
+                    Console.WriteLine($"The {enemy.Name} attacks and deals {enemyDamage} damage to you.");
+                    if (enemy.RadiationOnHit > 0)
+                    {
+                        player.TakeRadiation(enemy.RadiationOnHit);
+                        Console.WriteLine($"You received {enemy.RadiationOnHit} radiation from the {enemy.Name}!");
+                    }
                 }
             }
         }
