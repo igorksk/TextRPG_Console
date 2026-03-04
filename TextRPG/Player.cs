@@ -1,4 +1,4 @@
-using TextRPG.Items;
+using TextRPG.Models.Items;
 
 namespace TextRPG
 {

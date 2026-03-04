@@ -1,4 +1,4 @@
-namespace TextRPG.Items
+namespace TextRPG.Models.Items
 {
     public class Item(string name, string description, int value)
     {

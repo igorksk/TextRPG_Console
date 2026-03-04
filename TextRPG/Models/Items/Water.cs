@@ -1,4 +1,4 @@
-namespace TextRPG.Items
+namespace TextRPG.Models.Items
 {
     public class Water(string name, string description, int value, int hydration) : Item(name, description, value)
     {
