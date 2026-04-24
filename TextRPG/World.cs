@@ -35,17 +35,17 @@ namespace TextRPG
             // Random events
             int eventRoll = random.Next(100);
             
-            if (eventRoll < 40)
+            if (eventRoll < 35)
             {
                 FindItem(player);
             }
-            else if (eventRoll < 60)
-            {
-                EncounterEnemy(player);
-            }
-            else if (eventRoll < 80)
+            else if (eventRoll < 70)
             {
                 FindResources(player);
+            }
+            else if (eventRoll < 90)
+            {
+                EncounterEnemy(player);
             }
             else
             {
